@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap");
+@import "tailwindcss";
+
+@theme {
+    --font-heading: "Space Grotesk";
+    --font-body: "Manrope";
+
+    --color-background: #cae2ed;
+    --color-foreground: #f9feff;
+    --color-primary: #9ceaf2;
+    --color-accent: #00535c;
+    --color-navbar: #cae2ed99;
+    --color-heading: #0f0a0e;
+    --color-body: #2f4b52;
+
+    --shadow-primary: 4px 4px 0px var(--color-body);
+    --shadow-success: 4px 4px 0px var(--color-green-800);
+    --shadow-error: 4px 4px 0px var(--color-red-800);
+    --shadow-image: 6px 6px 0px var(--color-body);
+
+    --shadow-primary-small: 2px 2px 0px var(--color-body);
+
+    --inset-shadow-navbar: inset 0 0 100px #cae2ed;
+}
+
+* {
+    @apply font-body font-medium;
+}
+
+*::-webkit-scrollbar {
+    @apply hidden;
+}
+
+body {
+    @apply bg-background text-body leading-6 tracking-tight;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-heading font-bold tracking-tighter;
+}
+
+h2 {
+    @apply my-2 text-2xl;
+}
+
+button,
+a {
+    @apply cursor-pointer;
+}
+
+strong {
+    @apply font-bold;
+}
+
+.nav-link {
+    @apply text-body transition-colors ease-in-out;
+}
+
+.nav-link:hover {
+    @apply text-accent;
+}
+
+.primary-button {
+    @apply outline-body bg-primary text-body shadow-primary mt-1 flex -translate-1 items-center justify-center rounded-xl px-3 py-2 text-center outline-1 transition-all ease-in-out;
+}
+
+.secondary-button,
+select {
+    @apply outline-body bg-foreground text-body shadow-primary mt-1 flex -translate-1 items-center justify-center rounded-lg px-2 py-1 text-center outline-1 transition-all ease-in-out md:rounded-xl md:px-3 md:py-2;
+}
+
+.primary-button:active,
+.secondary-button:active,
+select:active {
+    @apply translate-0 shadow-none;
+}
+
+.animate-shine {
+    animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+    0% {
+        background-position: 100%;
+    }
+    100% {
+        background-position: -100%;
+    }
+}
+
+.apply-border {
+    box-shadow: 4px 4px 0px var(--color-body);
+}
+
+.summary h1,
+.summary h2,
+.summary h3,
+.summary h4,
+.summary h5,
+.summary h6 {
+    @apply mt-4 text-left text-xl font-semibold;
+}

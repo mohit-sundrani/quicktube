@@ -1,0 +1,59 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+enum Tone {
+    PROFESSIONAL
+    PLAYFUL
+    FRIENDLY
+    CASUAL
+}
+
+enum Style {
+    PARAGRAPHS
+    POINTS
+}
+
+enum Depth {
+    CONCISE
+    COMPREHENSIVE
+}
+
+type TokensUsed {
+    transcriptTokens Int
+    summaryTokens    Int
+    totalToken       Int
+}
+
+model Users {
+    id               String    @id @default(auto()) @map("_id") @db.ObjectId
+    name             String
+    email            String    @unique
+    password         String
+    credits          Int       @default(5)
+    lastReset        DateTime  @default(now())
+    createdAt        DateTime  @default(now())
+    createdSummaries Summary[] @relation("CreatedSummaries")
+}
+
+model Summary {
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    title       String
+    channel     String
+    thumbnail   String
+    link        String
+    tone        Tone
+    style       Style
+    depth       Depth
+    length      Int
+    content     String
+    tokensUsed  TokensUsed
+    createdAt   DateTime   @default(now())
+    createdBy   Users      @relation("CreatedSummaries", fields: [createdById], references: [id])
+    createdById String     @db.ObjectId
+}
