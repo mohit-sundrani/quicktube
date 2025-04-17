@@ -3,7 +3,7 @@ import { TranscriptResponse, YoutubeTranscript, YoutubeTranscriptError } from "y
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "../lib/db";
 import { Depth, Style, Tone } from "@prisma/client";
-import * as yt from "youtube-info-streams";
+import axios from "axios";
 import { AuthenticatedRequest } from "../lib/types";
 import { checkCredits, useCredits } from "../lib/credits";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -13,7 +13,12 @@ if (!process.env.GEMINI_API_KEY) {
     throw new Error("GEMINI API KEY not configured");
 }
 
+if (!process.env.YOUTUBE_API_KEY) {
+    throw new Error("YOUTUBE API KEY not configured");
+}
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY as string;
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY as string;
 
 export const createSummary = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const {
@@ -80,7 +85,10 @@ export const createSummary = async (req: AuthenticatedRequest, res: Response): P
 
         let info: any;
         try {
-            info = await yt.info(videoId);
+            const res = await axios.get(
+                `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${YOUTUBE_API_KEY}`
+            );
+            info = res.data.items[0].snippet;
         } catch (error) {
             console.error(error);
             res.status(400).json({ message: "Invalid YouTube URL" });
@@ -117,12 +125,9 @@ export const createSummary = async (req: AuthenticatedRequest, res: Response): P
 
         const newSummary = await db.summary.create({
             data: {
-                title: info.player_response.videoDetails.title,
-                channel: info.player_response.videoDetails.author,
-                thumbnail:
-                    info.player_response.videoDetails.thumbnail.thumbnails[
-                        info.player_response.videoDetails.thumbnail.thumbnails.length - 1
-                    ].url,
+                title: info.title,
+                channel: info.channelTitle,
+                thumbnail: info.thumbnails.maxres.url,
                 link: link,
                 tone: tone,
                 style: style,

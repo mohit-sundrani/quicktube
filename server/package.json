@@ -13,6 +13,7 @@
     "dependencies": {
         "@google/generative-ai": "^0.24.0",
         "@prisma/client": "^6.6.0",
+        "axios": "^1.8.4",
         "bcrypt": "^5.1.1",
         "cors": "^2.8.5",
         "dotenv": "^16.4.7",
@@ -20,7 +21,6 @@
         "express-rate-limit": "^7.5.0",
         "jsonwebtoken": "^9.0.2",
         "morgan": "^1.10.0",
-        "youtube-info-streams": "^1.1.1",
         "youtube-transcript": "^1.2.1"
     },
     "devDependencies": {

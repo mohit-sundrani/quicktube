@@ -19,7 +19,7 @@ A powerful web tool that transforms long YouTube videos into summaries.
 - **TypeScript**: A superset of JavaScript that adds static types.
 - **Axios**: For making HTTP requests.
 - **React Router**: For routing and navigation.
-- **ReactBits**: For animations.
+- **ReactBits**: For animations and background.
 - **Zod**: For schema validation.
 
 ### Server
@@ -37,6 +37,7 @@ A powerful web tool that transforms long YouTube videos into summaries.
 ## Tools
 
 - **Gemini API**: For summarizing youtube content.
+- **YouTube API**: For fetching youtube video info.
 - **Figma**: For designing the frontend.
 - **Prettier**: Code formatting.
 - **ESLint**: For linting TypeScript code.
