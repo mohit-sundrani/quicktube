@@ -36,8 +36,6 @@ A powerful web tool that transforms long YouTube videos into summaries.
 
 ## Tools
 
-### Designing
-
 - **Gemini API**: For summarizing youtube content.
 - **Figma**: For designing the frontend.
 - **Prettier**: Code formatting.

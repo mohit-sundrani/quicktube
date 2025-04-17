@@ -3,10 +3,11 @@ import { TranscriptResponse, YoutubeTranscript, YoutubeTranscriptError } from "y
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "../lib/db";
 import { Depth, Style, Tone } from "@prisma/client";
-import ytdl from "@distube/ytdl-core";
+import * as yt from "youtube-info-streams";
 import { AuthenticatedRequest } from "../lib/types";
 import { checkCredits, useCredits } from "../lib/credits";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { extractYouTubeID } from "../lib/yt";
 
 if (!process.env.GEMINI_API_KEY) {
     throw new Error("GEMINI API KEY not configured");
@@ -70,9 +71,16 @@ export const createSummary = async (req: AuthenticatedRequest, res: Response): P
             res.status(403).json({ message: "Insufficient credits" });
         }
 
-        let info: ytdl.videoInfo;
+        const videoId: string | null = extractYouTubeID(link);
+
+        if (!videoId) {
+            res.status(500).json({ message: "Internal server error" });
+            return;
+        }
+
+        let info: any;
         try {
-            info = await ytdl.getBasicInfo(link);
+            info = await yt.info(videoId);
         } catch (error) {
             console.error(error);
             res.status(400).json({ message: "Invalid YouTube URL" });
@@ -109,9 +117,12 @@ export const createSummary = async (req: AuthenticatedRequest, res: Response): P
 
         const newSummary = await db.summary.create({
             data: {
-                title: info.videoDetails.title,
-                channel: info.videoDetails.author.name,
-                thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
+                title: info.player_response.videoDetails.title,
+                channel: info.player_response.videoDetails.author,
+                thumbnail:
+                    info.player_response.videoDetails.thumbnail.thumbnails[
+                        info.player_response.videoDetails.thumbnail.thumbnails.length - 1
+                    ].url,
                 link: link,
                 tone: tone,
                 style: style,
